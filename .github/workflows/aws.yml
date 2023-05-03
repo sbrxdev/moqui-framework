@@ -77,13 +77,13 @@ jobs:
           # push it to ECR so that it can
           # be deployed to ECS.
           sed -i 's/github-ssh/github/g' myaddons.xml
-          ./gradlew getRuntime downloadOpenSearch # getComponentSet -PcomponentSet=ridgecrest
+          ./gradlew getRuntime downloadOpenSearch getComponentSet -PcomponentSet=ridgecrest
           sleep 1
           ./gradlew addRuntime
           cd docker/simple
           ./docker-build.sh ../.. $ECR_REGISTRY/$ECR_REPOSITORY:latest
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
-          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY"
+          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:latest"
 
       - name: Get Task Definition
         id: get-task-def
