@@ -84,7 +84,7 @@ jobs:
           eval "$(ssh-agent -s)"
           chmod 0600 ~/.ssh/id_ed25519
           ssh-add ~/.ssh/id_ed25519
-          ./gradlew getRuntime downloadOpenSearch getComponentSet -PcomponentSet=ridgecrest          
+          ./gradlew getRuntime downloadOpenSearch getComponentSet -PcomponentSet=ridgecrest getDepends      
           sleep 1
           ./gradlew addRuntime          
           cd docker/simple
