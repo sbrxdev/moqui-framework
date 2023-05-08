@@ -84,7 +84,7 @@ jobs:
           ./docker-build.sh ../.. $ECR_REGISTRY/$ECR_REPOSITORY:latest
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:latest"
-          echo "::set-output name2=test::testMessage"
+          echo "::set-output name2=test::$CONTAINER_NAME"
 
       - name: Get Task Definition
         id: get-task-def
@@ -100,6 +100,7 @@ jobs:
 #          container-name: ${{ env.CONTAINER_NAME }}
 #          image: ${{ steps.build-image.outputs.image }}
         run: |
+          echo "list $steps.build-image.outputs"
           echo "test $steps.build-image.outputs.test"
           echo "name2 $steps.build-image.outputs.name2"
           echo "testMessage $steps.build-image.outputs.testMessage"
