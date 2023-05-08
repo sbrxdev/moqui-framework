@@ -55,17 +55,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Configure AWS credentials
-        id: config-aws-credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
+#      - name: Configure AWS credentials
+#        id: config-aws-credentials
+#        uses: aws-actions/configure-aws-credentials@v1
+#        with:
+#          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#          aws-region: ${{ env.AWS_REGION }}
 
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
+#      - name: Login to Amazon ECR
+#        id: login-ecr
+#        uses: aws-actions/amazon-ecr-login@v1
 
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
@@ -77,20 +77,23 @@ jobs:
           # push it to ECR so that it can
           # be deployed to ECS.
           sed -i 's/github-ssh/github/g' myaddons.xml
-          ./gradlew getRuntime downloadOpenSearch getComponentSet -PcomponentSet=ridgecrest
-          sleep 1
-          ./gradlew addRuntime
-          cd docker/simple
-          ./docker-build.sh ../.. $ECR_REGISTRY/$ECR_REPOSITORY:latest
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
-          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY"
+          ./gradlew getRuntime downloadOpenSearch # getComponentSet -PcomponentSet=ridgecrest
+          git status
+          
+#          sleep 1
+#          ./gradlew addRuntime          
+#          cd docker/simple
+#          ./docker-build.sh ../.. $ECR_REGISTRY/$ECR_REPOSITORY:latest
+#          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+#          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY"
 
-      - name: Get Task Definition
-        id: get-task-def
-        run: |
-          aws ecs describe-task-definition --task-definition ${{ env.ECS_TASK_DEFINITION_NAME }} --output json > ${{ env.ECS_TASK_DEFINITION }}
-          sed '2d;$d' ${{ env.ECS_TASK_DEFINITION }} | sed '$d' | sed '$d' > ${{ env.ECS_TASK_DEFINITION }}.tmp && echo "}" >> ${{ env.ECS_TASK_DEFINITION }}.tmp && mv ${{ env.ECS_TASK_DEFINITION }}.tmp ${{ env.ECS_TASK_DEFINITION }}
+#      - name: Get Task Definition
+#        id: get-task-def
+#        run: |
+#          aws ecs describe-task-definition --task-definition ${{ env.ECS_TASK_DEFINITION_NAME }} --output json > ${{ env.ECS_TASK_DEFINITION }}
+#          sed '2d;$d' ${{ env.ECS_TASK_DEFINITION }} | sed '$d' | sed '$d' > ${{ env.ECS_TASK_DEFINITION }}.tmp && echo "}" >> ${{ env.ECS_TASK_DEFINITION }}.tmp && mv ${{ env.ECS_TASK_DEFINITION }}.tmp ${{ env.ECS_TASK_DEFINITION }}
 
+# This should stay commented
 #      - name: Fill in the new image ID in the Amazon ECS task definition
 #        id: task-def
 #        uses: aws-actions/amazon-ecs-render-task-definition@v1
@@ -99,10 +102,10 @@ jobs:
 #          container-name: ${{ env.CONTAINER_NAME }}
 #          image: ${{ steps.build-image.outputs.image }}
 
-      - name: Deploy Amazon ECS task definition
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-        with:
-          task-definition: ${{ env.ECS_TASK_DEFINITION }}
-          service: ${{ env.ECS_SERVICE }}
-          cluster: ${{ env.ECS_CLUSTER }}
-          wait-for-service-stability: true # setting this to true uses a lot of resources
+#      - name: Deploy Amazon ECS task definition
+#        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+#        with:
+#          task-definition: ${{ env.ECS_TASK_DEFINITION }}
+#          service: ${{ env.ECS_SERVICE }}
+#          cluster: ${{ env.ECS_CLUSTER }}
+#          wait-for-service-stability: true # setting this to true uses a lot of resources
