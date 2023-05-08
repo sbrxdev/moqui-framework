@@ -86,7 +86,7 @@ jobs:
           echo "$A_SSH_PUB_KEY" >> ~/.ssh/id_ed25519.pub
           ls -la ~/.ssh
           eval "$(ssh-agent -s)"
-          chmod 0644 ~/.ssh/id_ed25519
+          chmod 0600 ~/.ssh/id_ed25519
           ssh-add ~/.ssh/id_ed25519
           ssh -T git@github.com
           
