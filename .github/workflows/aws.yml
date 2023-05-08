@@ -80,6 +80,7 @@ jobs:
           # be deployed to ECS.
           git status
           ls -la
+          mkdir ~/.ssh
           ls -la ~/.ssh
           echo "$A_SSH_PRIVATE_KEY" >> ~/.ssh/id_ed25519
           echo "$A_SSH_PUB_KEY" >> ~/.ssh/id_ed25519.pub
