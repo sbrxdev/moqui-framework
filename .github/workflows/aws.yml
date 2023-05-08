@@ -88,7 +88,6 @@ jobs:
           eval "$(ssh-agent -s)"
           chmod 0600 ~/.ssh/id_ed25519
           ssh-add ~/.ssh/id_ed25519
-          sed -i 's/github-ssh/github/g' myaddons.xml
           ./gradlew getRuntime downloadOpenSearch getComponentSet -PcomponentSet=ridgecrest          
 #          sleep 1
 #          ./gradlew addRuntime          
