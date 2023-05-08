@@ -83,8 +83,8 @@ jobs:
           cd docker/simple
           ./docker-build.sh ../.. $ECR_REGISTRY/$ECR_REPOSITORY:latest
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
-          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:latest"
-          echo "::set-output name2=test::$CONTAINER_NAME"
+          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY"
+#          echo "::set-output name2=test::$CONTAINER_NAME"
 
       - name: Get Task Definition
         id: get-task-def
@@ -94,16 +94,16 @@ jobs:
 
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
-#        uses: aws-actions/amazon-ecs-render-task-definition@v1
-#        with:
-#          task-definition: ${{ env.ECS_TASK_DEFINITION }}
-#          container-name: ${{ env.CONTAINER_NAME }}
-#          image: ${{ steps.build-image.outputs.image }}
-        run: |
-          echo "list $steps.build-image.outputs"
-          echo "test $steps.build-image.outputs.test"
-          echo "name2 $steps.build-image.outputs.name2"
-          echo "testMessage $steps.build-image.outputs.testMessage"
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: ${{ env.ECS_TASK_DEFINITION }}
+          container-name: ${{ env.CONTAINER_NAME }}
+          image: ${{ steps.build-image.outputs.image }}
+#       run: |
+#          echo "list $steps.build-image.outputs"
+#          echo "test $steps.build-image.outputs.test"
+#          echo "name2 $steps.build-image.outputs.name2"
+#          echo "testMessage $steps.build-image.outputs.testMessage"
           
 
       - name: Deploy Amazon ECS task definition
