@@ -41,6 +41,8 @@ env:
   ECS_TASK_DEFINITION_NAME: ${{ secrets.MY_ECS_TASK_DEFINITION_NAME }} # set this to the name to your Amazon ECS task definition
   CONTAINER_NAME: ${{ secrets.MY_CONTAINER_NAME }}           # set this to the name of the container in the
   # containerDefinitions section of your task definition
+  A_SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+  A_SSH_PUB_KEY: ${{ secrets.SSH_PUB_KEY }}
 
 permissions:
   contents: read
@@ -76,10 +78,19 @@ jobs:
           # Build a docker container and
           # push it to ECR so that it can
           # be deployed to ECS.
-          sed -i 's/github-ssh/github/g' myaddons.xml
-          ./gradlew getRuntime downloadOpenSearch # getComponentSet -PcomponentSet=ridgecrest
           git status
+          ls -la
+          ls -la ~/.ssh
+          echo "$A_SSH_PRIVATE_KEY" >> ~/.ssh/id_ed25519
+          echo "$A_SSH_PUB_KEY" >> ~/.ssh/id_ed25519.pub
+          ls -la ~/.ssh
+          eval "$(ssh-agent -s)"
+          ssh-add ~/.ssh/id_ed25519
+          ssh -T git@github.com
           
+          
+#          sed -i 's/github-ssh/github/g' myaddons.xml
+#          ./gradlew getRuntime downloadOpenSearch # getComponentSet -PcomponentSet=ridgecrest          
 #          sleep 1
 #          ./gradlew addRuntime          
 #          cd docker/simple
