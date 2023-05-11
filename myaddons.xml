@@ -21,7 +21,7 @@
     <component name="mantle-shopify" group="tailorsoft" version="" branch="master"/>
 
     <!-- Component Sets -->
-    <component-set name="ridgecrest" components="PopCommerce,HiveMind,MarbleERP,ridgecrest"/>
+    <component-set name="ridgecrest" components="PopCommerce,HiveMind,MarbleERP"/>
 
     <!-- Release builds:
         gradle getComponentSet -PcomponentSet=custom -PlocationType=release
