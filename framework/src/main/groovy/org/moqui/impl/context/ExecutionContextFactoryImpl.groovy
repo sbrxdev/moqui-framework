@@ -390,29 +390,29 @@ class ExecutionContextFactoryImpl implements ExecutionContextFactory {
         // set default System properties now that all is merged
         for (MNode defPropNode in baseConfigNode.children("default-property")) {
             String propName = defPropNode.attribute("name")
+            String isSecretAttr = defPropNode.attribute("is-secret")
+            boolean isSecret = !"false".equals(isSecretAttr) &&
+                    ("true".equals(isSecretAttr) || propName.contains("pass") || propName.contains("pw") || propName.contains("key"))
             if (System.getProperty(propName)) {
-                if (propName.contains("pass") || propName.contains("pw") || propName.contains("key")) {
-                    logger.info("Found pw/key property ${propName}, not setting from env var or default")
+                if (isSecret) {
+                    logger.info("Found secret property ${propName}, not setting from env var or default")
                 } else {
                     logger.info("Found property ${propName} with value [${System.getProperty(propName)}], not setting from env var or default")
                 }
-                continue
-            }
-            if (System.getenv(propName) && !System.getProperty(propName)) {
+            } else if (System.getenv(propName)) {
                 // make env vars available as Java System properties
                 System.setProperty(propName, System.getenv(propName))
-                if (propName.contains("pass") || propName.contains("pw") || propName.contains("key")) {
-                    logger.info("Setting pw/key property ${propName} from env var")
+                if (isSecret) {
+                    logger.info("Setting secret property ${propName} from env var")
                 } else {
                     logger.info("Setting property ${propName} from env var with value [${System.getProperty(propName)}]")
                 }
-            }
-            if (!System.getProperty(propName) && !System.getenv(propName)) {
+            } else {
                 String valueAttr = defPropNode.attribute("value")
                 if (valueAttr != null && !valueAttr.isEmpty()) {
                     System.setProperty(propName, SystemBinding.expand(valueAttr))
-                    if (propName.contains("pass") || propName.contains("pw") || propName.contains("key")) {
-                        logger.info("Setting pw/key property ${propName} from default")
+                    if (isSecret) {
+                        logger.info("Setting secret property ${propName} from default")
                     } else {
                         logger.info("Setting property ${propName} from default with value [${System.getProperty(propName)}]")
                     }
