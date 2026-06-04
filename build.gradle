@@ -987,6 +987,7 @@ File downloadComponent(String targetDirPath, String type, Node component, Node a
     Node repository = myaddons != null ? (Node) myaddons.repository.find({ it."@name" == repositoryName }) : null
     if (repository == null) repository = (Node) addons.repository.find({ it."@name" == repositoryName })
     if (repository == null) throw new InvalidUserDataException("Repository ${repositoryName} not found in myaddons.xml or addons.xml")
+    if (type == 'release' && !component.'@version') type = repositoryName.endsWith('-ssh') ? 'git' : 'current'
     Node location = (Node) repository.location.find({ it."@type" == type })
     if (location == null) throw new InvalidUserDataException("Location for type ${type} now found in repository ${repositoryName}")
 
