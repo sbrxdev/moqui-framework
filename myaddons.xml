@@ -1,6 +1,6 @@
 <addons default-repository="github-ssh">
     <!-- Where to get runtime directory if not present -->
-    <runtime name="moqui-runtime" group="sbrxdev" version="3.0.0" branch="sbrxdev"/>
+    <runtime name="moqui-runtime" group="sbrxdev" version="" branch="sbrxdev"/>
 
     <!-- Mantle Business Artifact and Integration Components -->
 <!--    <component name="mantle-udm" group="sbrxdev" version="2.2.0" branch="sbrxdev"/>-->
